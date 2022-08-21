@@ -28,9 +28,11 @@ If you have `chocalatey` installed on your computer make sure to update the chro
 
 ---
 
-Navigate to your preferred folder and create a virtual environment in which you will work in.
+Navigate to your preferred folder in which you will work in and clone the repository to it.
 
 > For pycharm users, Pycharm automatically create one for you when you create a new project in the IDE.
+
+#### Create a virtual environment
 
 To create a virtual environment, open a terminal in the directory you will work in and run:
 
