@@ -4,20 +4,20 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as condition
 from selenium.common.exceptions import *
 import os
-from config import (browser, driver_wait_in_seconds, downloads_directory)
+from config import (browser, driver_wait_in_seconds, downloads_directory, logs)
 
 
 def remove_ads(driver, selector: str):
     i = 0
     soup = BeautifulSoup(driver.page_source, 'html.parser')  # Parsing content using beautifulsoup
     while soup.find(selector):
-        # print(soup.find(selector))
-        js = """
+
+        script = """
             var element = document.querySelector(""" + "'" + selector + "'" + """);
             if (element)
                 element.parentNode.removeChild(element);
             """
-        driver.execute_script(js)
+        driver.execute_script(script)
         soup = BeautifulSoup(driver.page_source, 'html.parser')  # Parsing content using beautifulsoup
         i += 1
         # print('Removed tag with selector ' + "'" + selector + "'" + ' with nr: ', i)
@@ -32,7 +32,7 @@ def cookieDismiss():
             cookie.click()
 
     except NoSuchElementException as e:
-        print(e)
+        print(f'check {logs} for more info')
 
 
 def get_text_from_github():
@@ -44,8 +44,8 @@ def get_text_from_github():
                                                                   "#repo-content-pjax-container > div > div > div.Box.mt-3.position-relative > div.Box-body.p-0.blob-wrapper.data.type-yaml.gist-border-0 > div > table > tbody > tr"))):
                 elem.append(tags)
             return elem
-    except Exception as e:
-        print(e)
+    except Exception:
+        print(f'check {logs} for more info')
 
 
 def save_extracted_to_file(extract_info):
@@ -54,5 +54,5 @@ def save_extracted_to_file(extract_info):
             for info in extract_info:
                 file.write(f"{info.text} \n")
         return True
-    except Exception as e:
-        print(e)
+    except Exception:
+        print(f'something occurred check {logs} for more info')
