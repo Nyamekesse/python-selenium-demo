@@ -1,4 +1,9 @@
+import logging
+import os.path
+import sys
+import traceback
 import time
+
 
 from selenium.common.exceptions import *
 from selenium.webdriver.common.by import By
@@ -7,16 +12,27 @@ from selenium.webdriver.support import expected_conditions as condition
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 
-from config import (browser, driver_wait_in_seconds, IMAGE_PATH, URL)
+from config import (browser, driver_wait_in_seconds, IMAGE_PATH, logs, URL)
 from functions import (remove_ads, save_extracted_to_file, cookieDismiss, get_text_from_github)
 from user_data import *
+
+logger = logging.getLogger('logger')
+file_handler = logging.FileHandler(os.path.join(logs, 'logs.log'))
+logger.addHandler(file_handler)
+
+
+def exc_handler(exctype, value, tb):
+    logger.exception(''.join(traceback.format_exception(exctype, value, tb)))
+
+
+sys.excepthook = exc_handler
 
 # open url and maximize window
 try:
     browser.get(URL)
     browser.maximize_window()
-except Exception as e:
-    print(e)
+except Exception:
+    print(f'An error occurred check {logs} for more info')
     browser.quit()
 
 # assert 'Demo Sign-Up Selenium Automation Practice Form' in driver.page_source
@@ -25,8 +41,8 @@ try:
         popup = browser.find_element(By.ID, 'ez-accept-all')
         popup.click()
 
-except NoSuchElementException as e:
-    print(e)
+except Exception:
+    print(f'check {logs} for more info')
 
 # check and click on accept cookie button
 cookieDismiss()
@@ -37,8 +53,9 @@ try:
     )
     inp_field1.clear()
     inp_field1.send_keys(FIRSTNAME, Keys.RETURN)
-except NoSuchElementException as e:
-    print(e)
+except Exception:
+    print(f'An error occurred check {logs} for more info')
+    browser.quit()
 
 # lastname input field
 inp_field2 = WebDriverWait(browser, driver_wait_in_seconds).until(
@@ -85,8 +102,8 @@ try:
     image_upload = browser.find_element(By.NAME, 'photo')
     image_upload.send_keys(IMAGE_PATH)
 
-except Exception as e:
-    print(e)
+except Exception:
+    print(f'An error occurred check {logs} for more info')
     browser.quit()
 
 try:
@@ -95,8 +112,8 @@ try:
                                          "1]/div/div[28]/div[2]/div/a")
     download_file.click()
 
-except NoSuchElementException as e:
-    print(e)
+except Exception:
+    print(f'An error occurred check {logs} for more info')
     browser.quit()
 
 try:
@@ -108,14 +125,15 @@ try:
                 (By.XPATH, "//*[@id=\"post-body-3077692503353518311\"]/div[1]/div/div/h2[2]/div["
                            "1]/div/div[28]/div[2]/div/a")))
         click_2.click()
-except Exception as e:
-    print(e)
+except Exception:
+    print(f'An error occurred check {logs} for more info')
+    browser.quit()
 
 extract_text = get_text_from_github()
 if len(extract_text) > 0:
     save_file = save_extracted_to_file(extract_text)
     if save_file:
-        time.sleep(5)
+        time.sleep(3)
         browser.back()
         browser.close()
         print('Done extracting information')
