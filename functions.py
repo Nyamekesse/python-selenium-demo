@@ -9,20 +9,27 @@ from config import (browser, driver_wait_in_seconds, downloads_directory, logs)
 
 def remove_ads(driver, selector: str):
     i = 0
-    soup = BeautifulSoup(driver.page_source, 'html.parser')  # Parsing content using beautifulsoup
-    while soup.find(selector):
+    # Parsing content using beautifulsoup
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+    check_for_ads = soup.find(selector)
+    if check_for_ads:
+        while soup.find(selector):
+            script = """
+                var element = document.querySelector(""" + "'" + selector + "'" + """);
+                if (element)
+                    element.parentNode.removeChild(element);
+                """
+            driver.execute_script(script)
+            # Parsing content using beautifulsoup
+            soup = BeautifulSoup(driver.page_source, 'html.parser')
+            i += 1
 
-        script = """
-            var element = document.querySelector(""" + "'" + selector + "'" + """);
-            if (element)
-                element.parentNode.removeChild(element);
-            """
-        driver.execute_script(script)
-        soup = BeautifulSoup(driver.page_source, 'html.parser')  # Parsing content using beautifulsoup
-        i += 1
-        # print('Removed tag with selector ' + "'" + selector + "'" + ' with nr: ', i)
-    print('Removed ' + str(i) + ' tags with the selector ' + "'" + selector + "'" + " and all it's children tags.")
-    return driver
+        print('Removed ' + str(i) + ' tags with the selector ' + "'" + selector + "'" + " and all it's children tags.")
+
+        return True
+    else:
+        return False
+
 
 
 def cookieDismiss():

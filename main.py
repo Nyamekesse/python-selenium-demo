@@ -27,6 +27,7 @@ def exc_handler(exctype, value, tb):
 
 sys.excepthook = exc_handler
 
+browser.implicitly_wait(driver_wait_in_seconds)
 # open url and maximize window
 try:
     browser.get(URL)
@@ -35,7 +36,7 @@ except Exception:
     print(f'An error occurred check {logs} for more info')
     browser.quit()
 
-# assert 'Demo Sign-Up Selenium Automation Practice Form' in driver.page_source
+assert 'Demo Sign-Up Selenium Automation Practice Form' in driver.page_source
 try:
     if browser.find_element(By.ID, 'ez-accept-all').is_displayed():
         popup = browser.find_element(By.ID, 'ez-accept-all')
@@ -117,7 +118,7 @@ except Exception:
     browser.quit()
 
 try:
-    # if driver.find_element(By.XPATH, '/html/ins').is_displayed():
+
     driver_5 = remove_ads(browser, "ins")
     if browser:
         click_2 = WebDriverWait(browser, 10).until(

@@ -5,7 +5,7 @@ from selenium import webdriver
 URL = "https://www.techlistic.com/p/selenium-practice-form.html"
 IMAGE_PATH = os.path.join(os.getcwd(), 'js.png')
 # add path to environment variables
-@TODO
+#@TODO
 # Uncomment and update the path to point to the directory storing the Chromdriver you have downloaded
 os.environ['PATH'] += r"C:\selenium-chrome-drivers\chromedriver_win32"
 downloads_directory = os.path.join(os.getcwd(), "saved_files")
@@ -20,4 +20,4 @@ if not os.path.exists(logs):
 # timeout in seconds
 driver_wait_in_seconds = 10
 browser = webdriver.Chrome(options=options)
-browser.implicitly_wait(driver_wait_in_seconds)
+
