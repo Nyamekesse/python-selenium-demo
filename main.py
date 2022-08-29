@@ -36,7 +36,6 @@ except Exception:
     print(f'An error occurred check {logs} for more info')
     browser.quit()
 
-assert 'Demo Sign-Up Selenium Automation Practice Form' in driver.page_source
 try:
     if browser.find_element(By.ID, 'ez-accept-all').is_displayed():
         popup = browser.find_element(By.ID, 'ez-accept-all')
